@@ -1,0 +1,18 @@
+Filename,Customer ID,Name,Surname,Age,Region,Date Joined,Balance
+file1,100000001,Simon,Walsh,21,England,05.Jan.15,113810.15
+file2,100000001,Ratna,Walsh,21,England,05.Jan.15,113810.15
+file1,100000003,Liam,Brown,46,England,07.Jan.15,101536.83
+file2,100000003,Liam,Kumar,46,England,07.Jan.15,101536.83
+file1,100000005,Deirdre,Pullman,38,England,09.Jan.15,35639.79
+file2,100000005,Deirdre,Pullman,25,England,09.Jan.15,35639.79
+file1,100000012,Benjamin,Grant,39,England,12.Jan.15,32281.62
+file2,100000012,Benjamin,Grant,39,England,12.Jan.15,5000
+file2,200000619,Alexander,Abraham,49,Scotland,21.May.15,32144.44
+file2,200000620,Simon,Slater,51,Scotland,21.May.15,54343.81
+file2,200000621,Andrew,Hill,51,Scotland,21.May.15,60857.23
+file2,200000622,Christopher,Randall,49,Scotland,21.May.15,68252.3
+file2,200000623,Brian,Mitchell,53,Scotland,21.May.15,110688.19
+file2,300000006,Ava,Coleman,30,India,09.Jan.15,122443.77
+file1,300000006,Ava,Coleman,30,Wales,09.Jan.15,122443.77
+file2,300000624,Tim,Paterson,40,Wales,21.May.15,34324.69
+file2,400000625,Eric,Oliver,22,Northern Ireland,21.May.15,10472.49
