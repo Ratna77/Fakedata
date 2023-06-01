@@ -1,8 +1,0 @@
-{% macro schema_length_check_test(column_name, max_length) %}
-  {{
-    config(
-      materialized='view',
-      post_hook= "select case when length({{ column_name }}) > {{ max_length }} then fail() else pass() end as length_check"
-    )
-  }}
-{% endmacro %}
