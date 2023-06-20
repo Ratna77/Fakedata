@@ -1,0 +1,4 @@
+src,filename,Column_to_mask,mask_fakedata
+COG,input_file,Name,name
+COG,input_file,Region,state
+COG,input_file,custid,random_int
