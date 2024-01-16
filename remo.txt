@@ -1,8 +1,14 @@
-It seems like you've received a message regarding planning for an offshore move by the end of March, as was discussed previously. A suitable reply could acknowledge the message, confirm your understanding of the plan, and possibly ask any questions you might have about the move. Here's an example response you could use:
+import re
 
-"Hi Yunus,
+def contains_all_patterns(name):
+    # This pattern checks for the presence of all three patterns in any order
+    pattern = r'(?=.*RAHA)(?=.*KJJ)(?=.*UHH)'
+    return bool(re.search(pattern, name, re.I))
 
-Thank you for the confirmation. I'll start making the necessary arrangements for the offshore transition by the end of March. Are there any specific details or preparations we need to discuss further?
+# Example usage:
+name_to_check = "This string contains RAHA, KJJ, and UHH in some order."
 
-Best,
-[Your Name]"
+if contains_all_patterns(name_to_check):
+    print("All patterns found.")
+else:
+    print("Not all patterns found.")
