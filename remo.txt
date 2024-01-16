@@ -1,14 +1,12 @@
 import re
 
-def contains_all_patterns(name):
-    # This pattern checks for the presence of all three patterns in any order
-    pattern = r'(?=.*RAHA)(?=.*KJJ)(?=.*UHH)'
-    return bool(re.search(pattern, name, re.I))
-
-# Example usage:
-name_to_check = "This string contains RAHA, KJJ, and UHH in some order."
-
-if contains_all_patterns(name_to_check):
-    print("All patterns found.")
-else:
-    print("Not all patterns found.")
+def replace_first_name(name):
+    if 'whereare' in name.lower():
+        return 'KING'
+    elif 'sasstry' in name.lower():
+        return 'MILLER'
+    elif 'jusf' in name.lower():
+        return 'SCOTT'
+    # Updated pattern with positive lookaheads for each required term
+    elif re.search(r'(?=.*jaju)(?=.*rriv)(?=.*omnibus)(?=.*letter)(?=.*set)', name, re.I):
+        return 'CHLO
