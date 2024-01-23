@@ -1,12 +1,2 @@
-import re
-
-def replace_first_name(name):
-    if 'whereare' in name.lower():
-        return 'KING'
-    elif 'sasstry' in name.lower():
-        return 'MILLER'
-    elif 'jusf' in name.lower():
-        return 'SCOTT'
-    # Updated pattern with positive lookaheads for each required term
-    elif re.search(r'(?=.*jaju)(?=.*rriv)(?=.*omnibus)(?=.*letter)(?=.*set)', name, re.I):
-        return 'CHLO
+	1.	“In the Address file, keep only the characters before the space in the postcode column.”
+	2.	“For Security Arrangements, classify the types according to the applied patterns in the Note columns.”
