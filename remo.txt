@@ -1,2 +1,6 @@
 	1.	“In the Address file, keep only the characters before the space in the postcode column.”
-	2.	“For Security Arrangements, classify the types according to the applied patterns in the Note columns.”
+	2.	“For Security Arrangements
+
+"Hi Mike, could we meet for a quick chat in the lunch area? I just need 10 minutes of your time. Thanks!"
+
+, classify the types according to the applied patterns in the Note columns.”
