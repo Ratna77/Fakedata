@@ -27,21 +27,13 @@ def replace_columns_with_fake_data(dataframe, column_mappings):
     for column, fake_data_type in column_mappings.items():
         column_index = int(column) - 1
         if fake_data_type in fake_data_functions:
-            if fake_data_type == "postcode":
-                dataframe.iloc[:, column_index] = dataframe.iloc[:, column_index].apply(
-                    lambda x: fake_data_functions[fake_data_type](x) if pd.notna(x) and str(x).strip() != '' else None
-                )
-            elif fake_data_type == "first_name":
-                dataframe.iloc[:, column_index] = dataframe.iloc[:, column_index].apply(
-                    lambda x: fake_data_functions[fake_data_type](fake, x) if pd.notna(x) and str(x).strip() != '' else None
-                )
-            else:
-                generated_data = dataframe.iloc[:, column_index].apply(
-                    lambda x: fake_data_functions[fake_data_type]() if pd.notna(x) and str(x).strip() != '' else None
-                )
-                # Check for delimiter characters and replace them with spaces
-                generated_data = generated_data.str.replace("|", " ").str.replace("\n", " ")
-                dataframe.iloc[:, column_index] = generated_data
+            generated_data = dataframe.iloc[:, column_index].apply(
+                lambda x: fake_data_functions[fake_data_type]() if pd.notna(x) and str(x).strip() != '' else None
+            )
+            # Check for special characters in generated data
+            if fake_data_type in ["last_name", "name"]:  # Add other columns here if needed
+                generated_data = generated_data.str.replace("|", "").str.replace("\n", "")
+            dataframe.iloc[:, column_index] = generated_data
         else:
             logger.warning(f"Invalid fake data type for column {column}!")
     return dataframe
