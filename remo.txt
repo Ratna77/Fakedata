@@ -30,14 +30,13 @@ def replace_columns_with_fake_data(dataframe, column_mappings):
             # Check if the column is part of the masking process
             if column_index < dataframe.shape[1]:
                 column_name = dataframe.columns[column_index]
-                if column_name in column_mappings:
-                    generated_data = dataframe.iloc[:, column_index].apply(
+                if column_name in dataframe.columns:
+                    dataframe[column_name] = dataframe[column_name].apply(
                         lambda x: x.replace("\\", "") if isinstance(x, str) else x
                     )
-                    generated_data = generated_data.apply(
+                    dataframe[column_name] = dataframe[column_name].apply(
                         lambda x: fake_data_functions[fake_data_type]() if pd.notna(x) and str(x).strip() != '' else None
                     )
-                    dataframe.iloc[:, column_index] = generated_data
         else:
             logger.warning(f"Invalid fake data type for column {column}!")
     return dataframe
