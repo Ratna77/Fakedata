@@ -1,3 +1,5 @@
+awk -F'|' 'BEGIN {OFS=FS} {gsub(/\\/, "", $2); print}' inputfile.txt > outputfile.txt
+
 def process_config_entries(config_entries, input_dir, mask_folder, output_dir):
     global source_file_count, total_columns_masked, total_records_masked
     for entry in config_entries:
