@@ -31,7 +31,7 @@ def replace_columns_with_fake_data(dataframe, column_mappings):
                 lambda x: fake_data_functions[fake_data_type]() if pd.notna(x) and str(x).strip() != '' else None
             )
             # Check for special characters in generated data
-            if fake_data_type in ["last_name", "name"]:  # Add other columns here if needed
+            if fake_data_type != "zipcode":  # Exclude columns where special characters are allowed
                 generated_data = generated_data.str.replace("|", "").str.replace("\n", "")
             dataframe.iloc[:, column_index] = generated_data
         else:
