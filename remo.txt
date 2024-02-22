@@ -1,1 +1,1 @@
-awk -i inplace '{ gsub(/\\/, "", $2); print }' inputfile.txt
+awk -i inplace -F'|' 'BEGIN {OFS=FS} {gsub(/\\/, "", $2); print}' inputfile.txt
