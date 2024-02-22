@@ -1,1 +1,49 @@
-awk -i inplace -F'|' 'BEGIN {OFS=FS} {gsub(/\\/, "", $2); print}' inputfile.txt
+def process_config_entries(config_entries, input_dir, mask_folder, output_dir):
+    global source_file_count, total_columns_masked, total_records_masked
+    for entry in config_entries:
+        src_file = entry['src_file']
+        column_mappings = entry['columns']
+        os.makedirs(output_dir, exist_ok=True)
+        input_file_path = os.path.join(input_dir, src_file)
+        if not os.path.isfile(input_file_path):
+            logger.warning(f"The file '{input_file_path}' does not exist. Skipping this file.")
+            continue
+        output_file = os.path.join(output_dir, src_file)
+        temp_output_file = os.path.join(output_dir, f"temp_{src_file}")  # Temporary output file path
+        with open(input_file_path, 'r', newline='') as file:
+            reader = csv.reader(file, delimiter='|', quoting=csv.QUOTE_NONE, escapechar='\\')
+            lines = list(reader)
+        header = '|'.join(lines[0]) + '\n'
+        footer = '|'.join(lines[-1]) + '\n'
+        body_lines = lines[1:-1]
+        body = pd.DataFrame(body_lines, dtype=str)
+        column_mappings = dict(column.split('=') for column in column_mappings.split(','))
+        columns_masked = len(column_mappings)  # Count columns to be masked
+        body = replace_columns_with_fake_data(body, column_mappings)
+        body = body.applymap(lambda x: x.replace("|", ",").replace("\n", " ") if isinstance(x, str) else x)
+        csv_body = body.to_csv(index=False, sep='|', header=False, quoting=csv.QUOTE_NONE, quotechar="", escapechar="\\")
+        with open(temp_output_file, 'w', newline='\n') as temp_file:  # Write to temporary output file
+            temp_file.write(header)
+            temp_file.write(csv_body)
+            temp_file.write(footer)
+        # Perform masking using awk command
+        os.system(f"awk -i inplace -F'|' BEGIN {{OFS=FS}} {{gsub(/\\\\/, \"\", $masked_column_get_from_config_file); print $0 > \"{output_file}\"}} {temp_output_file}")
+        os.remove(temp_output_file)  # Remove temporary output file after masking
+        # Record input file record count and columns masked
+        input_record_count = len(body_lines)
+        source_file_count += 1
+        total_columns_masked += columns_masked
+        # Count the number of records in the generated masked file
+        with open(output_file, 'r', newline='') as file:
+            masked_lines = list(csv.reader(file, delimiter='|', quoting=csv.QUOTE_NONE, escapechar='\\'))
+        masked_record_count = len(masked_lines) - 2  # Subtract header and footer lines
+        total_records_masked += masked_record_count
+        masked_file_paths.append(output_file)
+        # Create summary data for the source file
+        summary_data.append({
+            'Source File': src_file,
+            'Input Records': input_record_count,
+            'Columns Masked': columns_masked,
+            'Masked Record Count': masked_record_count,
+            'Masked File Path': output_file
+        })
