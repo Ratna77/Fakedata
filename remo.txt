@@ -27,13 +27,17 @@ def replace_columns_with_fake_data(dataframe, column_mappings):
     for column, fake_data_type in column_mappings.items():
         column_index = int(column) - 1
         if fake_data_type in fake_data_functions:
-            generated_data = dataframe.iloc[:, column_index].apply(
-                lambda x: fake_data_functions[fake_data_type]() if pd.notna(x) and str(x).strip() != '' else None
-            )
-            # Check for special characters in generated data
-            if fake_data_type != "zipcode":  # Exclude columns where special characters are allowed
-                generated_data = generated_data.str.replace("|", "").str.replace("\n", "")
-            dataframe.iloc[:, column_index] = generated_data
+            # Check if the column is part of the masking process
+            if column_index < dataframe.shape[1]:
+                column_name = dataframe.columns[column_index]
+                if column_name in column_mappings:
+                    generated_data = dataframe.iloc[:, column_index].apply(
+                        lambda x: x.replace("\\", "") if isinstance(x, str) else x
+                    )
+                    generated_data = generated_data.apply(
+                        lambda x: fake_data_functions[fake_data_type]() if pd.notna(x) and str(x).strip() != '' else None
+                    )
+                    dataframe.iloc[:, column_index] = generated_data
         else:
             logger.warning(f"Invalid fake data type for column {column}!")
     return dataframe
