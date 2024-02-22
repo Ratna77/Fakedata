@@ -1,3 +1,5 @@
+awk -F'|' 'BEGIN {OFS=FS} {gsub(/\\/, "", $2); gsub(/\\/, "", $4); gsub(/\\/, "", $10); print}' inputfile.txt > outputfile.txt
+
 import pandas as pd
 from faker import Faker
 import os
