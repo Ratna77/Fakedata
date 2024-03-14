@@ -1,9 +1,24 @@
-="SELECT *, CASE 
-    WHEN t1." & B2 & " IS NULL THEN 'Missing in " & C2 & "'
-    WHEN t2." & D2 & " IS NULL THEN 'Missing in " & A2 & "'
-    WHEN t1." & B2 & " <> t2." & D2 & " THEN 'Mismatch in " & B2 & "'
-    -- Add more comparisons for each field as needed
-    ELSE 'No Difference'
-    END AS Difference
-FROM " & A2 & " t1
-FULL OUTER JOIN " & C2 & " t2 ON t1." & B2 & " = t2." & D2
+# Define the table names and column names
+table1_name = 'EMP'
+table2_name = 'EMP1'
+columns = [
+    ('EMPNO', 'EMPNO'),
+    ('NAME', 'NAME'),
+    ('SALE', 'SALE'),
+    ('JOB', 'JOB'),
+    ('COMM', 'COMM'),
+    ('DEPT', 'DEPT')
+]  # Add all your column pairs here
+
+# Generate the SQL query
+sql_query = f"SELECT '{table1_name}' AS Table1, '{table2_name}' AS Table2, "
+
+for col1, col2 in columns:
+    sql_query += f"'{col1}' AS Table1_Column, '{col2}' AS Table2_Column, "
+    sql_query += f"CASE WHEN {table1_name}.{col1} = {table2_name}.{col2} THEN 'Matched' ELSE 'Not Matched' END AS Result, "
+
+# Remove the trailing comma and space, and add the FROM clause
+sql_query = sql_query[:-2] + f"FROM {table1_name} FULL OUTER JOIN {table2_name} ON {table1_name}.EMPNO = {table2_name}.EMPNO;"
+
+# Print the generated SQL query
+print(sql_query)
