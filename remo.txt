@@ -1,4 +1,6 @@
-
+Counts for tables and files should match expectations based on input data.
+Data in file columns should be accurate and consistent.
+All records should be successfully loaded into the system without any loss.
 Title: Count Mismatch and Column Discrepancy for Anicilayr limits
 
 Description:
