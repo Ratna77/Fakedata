@@ -1,3 +1,5 @@
+awk '{for (i=2; i<=NF; i++) printf "%s%s", (i==2 ? "" : FS), $i; print ""}' input_file > output_file
+
 import csv
 import sys
 
