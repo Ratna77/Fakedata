@@ -1,24 +1,75 @@
-# Define the table names and column names
-table1_name = 'EMP'
-table2_name = 'EMP1'
-columns = [
-    ('EMPNO', 'EMPNO'),
-    ('NAME', 'NAME'),
-    ('SALE', 'SALE'),
-    ('JOB', 'JOB'),
-    ('COMM', 'COMM'),
-    ('DEPT', 'DEPT')
-]  # Add all your column pairs here
+import csv
+import sys
 
-# Generate the SQL query
-sql_query = f"SELECT '{table1_name}' AS Table1, '{table2_name}' AS Table2, "
+def compare_csv_files(file1, file2):
+    # Read the CSV files
+    with open(file1, 'r', newline='') as f1, open(file2, 'r', newline='') as f2:
+        reader1 = csv.reader(f1)
+        reader2 = csv.reader(f2)
 
-for col1, col2 in columns:
-    sql_query += f"'{col1}' AS Table1_Column, '{col2}' AS Table2_Column, "
-    sql_query += f"CASE WHEN {table1_name}.{col1} = {table2_name}.{col2} THEN 'Matched' ELSE 'Not Matched' END AS Result, "
+        header1 = next(reader1)
+        header2 = next(reader2)
 
-# Remove the trailing comma and space, and add the FROM clause
-sql_query = sql_query[:-2] + f"FROM {table1_name} FULL OUTER JOIN {table2_name} ON {table1_name}.EMPNO = {table2_name}.EMPNO;"
+        # Ensure that both files have the same number of columns
+        if len(header1) != len(header2):
+            return "Number of columns does not match between the two files."
 
-# Print the generated SQL query
-print(sql_query)
+        # Initialize variables to track summary and mismatched columns
+        summary = {'matched': 0, 'mismatched': 0}
+        mismatched_columns = []
+
+        # Compare header names
+        for col1, col2 in zip(header1, header2):
+            if col1 != col2:
+                mismatched_columns.append((col1, col2))
+
+        # Compare rows
+        matched_records = []
+        unmatched_records = []
+        for row_number, (row1, row2) in enumerate(zip(reader1, reader2), start=1):
+            is_matched = True
+            for col_number, (val1, val2) in enumerate(zip(row1, row2), start=1):
+                if val1 != val2:
+                    is_matched = False
+                    mismatched_columns.append((header1[col_number-1], header2[col_number-1], row_number, val1, val2))
+                    break
+            if is_matched:
+                matched_records.append(row1 + ['file1'])
+                matched_records.append(row2 + ['file2'])
+            else:
+                unmatched_records.append(row1 + ['file1'])
+                unmatched_records.append(row2 + ['file2'])
+
+        return matched_records, unmatched_records, mismatched_columns, header1
+
+def write_csv(file_name, data, header=None):
+    with open(file_name, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        if header:
+            writer.writerow(header + ['filename'])
+        for row in data:
+            writer.writerow(row)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python cmp.py <file1> <file2>")
+        sys.exit(1)
+
+    file1 = sys.argv[1]
+    file2 = sys.argv[2]
+
+    matched_records, unmatched_records, mismatched_columns, header = compare_csv_files(file1, file2)
+
+    # Write matched records to a CSV file
+    write_csv('matched_records.csv', matched_records, header)
+
+    # Write unmatched records to a CSV file
+    write_csv('unmatched_records.csv', unmatched_records, header)
+
+    # Print mismatched columns
+    print("\nMismatched Columns:")
+    if mismatched_columns:
+        for col1, col2, row_number, val1, val2 in mismatched_columns:
+            print(f"Mismatch at row {row_number}: {col1} in File1 ({val1}) and {col2} in File2 ({val2})")
+    else:
+        print("No mismatched columns found.")
