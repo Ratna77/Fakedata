@@ -1,0 +1,9 @@
+="SELECT *, CASE 
+    WHEN t1." & B2 & " IS NULL THEN 'Missing in " & C2 & "'
+    WHEN t2." & D2 & " IS NULL THEN 'Missing in " & A2 & "'
+    WHEN t1." & B2 & " <> t2." & D2 & " THEN 'Mismatch in " & B2 & "'
+    -- Add more comparisons for each field as needed
+    ELSE 'No Difference'
+    END AS Difference
+FROM " & A2 & " t1
+FULL OUTER JOIN " & C2 & " t2 ON t1." & B2 & " = t2." & D2
